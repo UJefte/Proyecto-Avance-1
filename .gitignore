@@ -1,0 +1,14 @@
+target/
+!.mvn/wrapper/maven-wrapper.jar
+.idea/
+*.iml
+.vscode/
+.classpath
+.project
+.settings/
+*.log
+.DS_Store
+
+# Credenciales locales (no subir)
+src/main/resources/secrets.properties
+.env
