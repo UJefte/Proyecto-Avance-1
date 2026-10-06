@@ -3,6 +3,10 @@
 Proyecto final (avance 1). API REST en **Spring Boot** para controlar la entrada y salida de residentes,
 trabajadores y visitas mediante pases QR.
 
+# Integrantes de BlackWatch 
+Aguirre Rivera Uriel Jefté
+Rivera Rodriguez Jesus Armando
+
 ## Qué hace
 
 - Registra departamentos, residentes y trabajadores (con horario permitido).
