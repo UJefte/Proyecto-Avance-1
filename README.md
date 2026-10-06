@@ -4,8 +4,8 @@ Proyecto final (avance 1). API REST en **Spring Boot** para controlar la entrada
 trabajadores y visitas mediante pases QR.
 
 # Integrantes de BlackWatch 
-Aguirre Rivera Uriel Jefté
-Rivera Rodriguez Jesus Armando
+-Aguirre Rivera Uriel Jefté
+-Rivera Rodriguez Jesus Armando
 
 ## Qué hace
 
