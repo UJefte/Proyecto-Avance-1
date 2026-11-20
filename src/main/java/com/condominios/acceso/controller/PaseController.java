@@ -7,6 +7,7 @@ import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,7 +18,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/pases")
+@RequestMapping("/api/v1/pases")
 @RequiredArgsConstructor
 public class PaseController {
 
@@ -44,6 +45,17 @@ public class PaseController {
     @GetMapping
     public List<PaseResponse> listar() {
         return service.listar();
+    }
+
+    @GetMapping("/{id}")
+    public PaseResponse obtener(@PathVariable Long id) {
+        return service.obtener(id);
+    }
+
+    /** Imagen PNG del codigo QR del pase. */
+    @GetMapping(value = "/{id}/qr", produces = MediaType.IMAGE_PNG_VALUE)
+    public byte[] imagenQr(@PathVariable Long id) {
+        return service.imagenQr(id);
     }
 
     @PutMapping("/{id}/desactivar")

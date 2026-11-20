@@ -10,6 +10,9 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
+import org.springframework.web.multipart.support.MissingServletRequestPartException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -35,6 +38,22 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<Map<String, Object>> cuerpoInvalido(HttpMessageNotReadableException ex) {
         return error(HttpStatus.BAD_REQUEST, "Cuerpo de la petición inválido o con formato incorrecto");
+    }
+
+    // por ejemplo /solicitudes?estado=OTRO o /pases/abc
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<Map<String, Object>> tipoInvalido(MethodArgumentTypeMismatchException ex) {
+        return error(HttpStatus.BAD_REQUEST, "Valor invalido para " + ex.getName() + ": " + ex.getValue());
+    }
+
+    @ExceptionHandler(MissingServletRequestPartException.class)
+    public ResponseEntity<Map<String, Object>> faltaArchivo(MissingServletRequestPartException ex) {
+        return error(HttpStatus.BAD_REQUEST, "Falta el archivo: " + ex.getRequestPartName());
+    }
+
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public ResponseEntity<Map<String, Object>> archivoGrande(MaxUploadSizeExceededException ex) {
+        return error(HttpStatus.BAD_REQUEST, "El archivo es demasiado grande");
     }
 
     private ResponseEntity<Map<String, Object>> error(HttpStatus status, String mensaje) {

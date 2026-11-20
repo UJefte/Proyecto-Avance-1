@@ -1,0 +1,36 @@
+# Levanta la base de datos y el API juntos:
+#   docker compose up --build
+# API: http://localhost:8080/swagger-ui.html
+services:
+  db:
+    image: postgres:16
+    container_name: condominios-db
+    environment:
+      POSTGRES_DB: condominios
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - datos-postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d condominios"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build: .
+    container_name: condominios-api
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DB_URL: jdbc:postgresql://db:5432/condominios
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+    ports:
+      - "8080:8080"
+
+volumes:
+  datos-postgres:

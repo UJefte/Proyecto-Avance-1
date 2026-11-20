@@ -11,4 +11,10 @@ target/
 
 # Credenciales locales (no subir)
 src/main/resources/secrets.properties
+src/main/resources/local.properties
 .env
+
+# reportes generados por newman y k6
+pruebas/reportes/*
+!pruebas/reportes/.gitkeep
+node_modules/

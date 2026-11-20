@@ -28,6 +28,7 @@ public class PaseService {
     private final ResidenteRepository residenteRepo;
     private final TrabajadorRepository trabajadorRepo;
     private final VisitaRepository visitaRepo;
+    private final QrService qrService;
 
     @Transactional
     public PaseResponse crearParaResidente(Long residenteId) {
@@ -88,12 +89,27 @@ public class PaseService {
         return paseRepo.findAll().stream().map(PaseResponse::from).toList();
     }
 
+    @Transactional(readOnly = true)
+    public PaseResponse obtener(Long id) {
+        return PaseResponse.from(buscar(id));
+    }
+
+    // imagen PNG del QR para mandarla al residente o imprimirla
+    @Transactional(readOnly = true)
+    public byte[] imagenQr(Long id) {
+        return qrService.generarPng(buscar(id).getCodigo(), 300);
+    }
+
     @Transactional
     public PaseResponse desactivar(Long id) {
-        PaseQR pase = paseRepo.findById(id)
-                .orElseThrow(() -> new RecursoNoEncontradoException("Pase", id));
+        PaseQR pase = buscar(id);
         pase.setActivo(false);
         return PaseResponse.from(paseRepo.save(pase));
+    }
+
+    private PaseQR buscar(Long id) {
+        return paseRepo.findById(id)
+                .orElseThrow(() -> new RecursoNoEncontradoException("Pase", id));
     }
 
     private PaseQR nuevoPase(TipoPase tipo) {

@@ -9,6 +9,7 @@ import com.condominios.acceso.entity.TipoPase;
 import com.condominios.acceso.entity.Trabajador;
 import com.condominios.acceso.repository.PaseQRRepository;
 import com.condominios.acceso.repository.RegistroAccesoRepository;
+import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Arrays;
@@ -26,6 +27,7 @@ public class AccesoService {
 
     private final PaseQRRepository paseRepo;
     private final RegistroAccesoRepository registroRepo;
+    private final QrService qrService;
 
     /**
      * Procesa un QR escaneado en caseta. Si el pase ya tiene una entrada sin salida,
@@ -62,6 +64,12 @@ public class AccesoService {
         pase.setUsosActuales(pase.getUsosActuales() + 1);
         paseRepo.save(pase);
         return guardar(pase, codigo, TipoMovimiento.ENTRADA, ahora, ResultadoAcceso.PERMITIDO, "Entrada registrada");
+    }
+
+    /** El guardia sube la foto del QR, se lee con ZXing y se valida igual que el codigo. */
+    @Transactional
+    public AccesoResponse validarImagen(InputStream imagen) {
+        return validar(qrService.leer(imagen));
     }
 
     @Transactional(readOnly = true)

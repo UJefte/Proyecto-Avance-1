@@ -1,0 +1,14 @@
+{
+  "name": "pruebas-condominios",
+  "private": true,
+  "description": "Pruebas del API con Postman (newman) y K6",
+  "scripts": {
+    "postman": "newman run postman/condominios.postman_collection.json -e postman/local.postman_environment.json -r cli,htmlextra --reporter-htmlextra-export reportes/postman-local.html",
+    "postman:railway": "newman run postman/condominios.postman_collection.json -e postman/railway.postman_environment.json -r cli,htmlextra --reporter-htmlextra-export reportes/postman-railway.html",
+    "k6": "k6 run k6/carga.js"
+  },
+  "devDependencies": {
+    "newman": "^6.2.1",
+    "newman-reporter-htmlextra": "^1.23.1"
+  }
+}

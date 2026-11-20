@@ -1,0 +1,9 @@
+target/
+.git/
+.idea/
+.vscode/
+pruebas/
+docs/
+src/main/resources/local.properties
+src/main/resources/secrets.properties
+*.md
