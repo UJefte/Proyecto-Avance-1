@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head th:replace="~{fragmentos :: cabeza('Inicio')}"></head>
+<body>
+<header th:replace="~{fragmentos :: menu('inicio')}"></header>
+<main>
+    <h1>Panel del condominio</h1>
+
+    <div class="tarjetas">
+        <div class="tarjeta">
+            <span class="numero" th:text="${totalResidentes}">0</span>
+            <span>Residentes</span>
+        </div>
+        <div class="tarjeta">
+            <span class="numero" th:text="${pasesActivos}">0</span>
+            <span>Pases activos</span>
+        </div>
+        <div class="tarjeta">
+            <span class="numero" th:text="${accesosHoy}">0</span>
+            <span>Escaneos de hoy</span>
+        </div>
+        <div class="tarjeta">
+            <span class="numero" th:text="${pendientes}">0</span>
+            <span>Visitas por aprobar</span>
+        </div>
+    </div>
+
+    <p class="nota">La documentación del API está en <a th:href="@{/swagger-ui.html}">Swagger</a>.</p>
+</main>
+</body>
+</html>

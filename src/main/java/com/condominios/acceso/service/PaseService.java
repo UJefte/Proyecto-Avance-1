@@ -34,6 +34,9 @@ public class PaseService {
     public PaseResponse crearParaResidente(Long residenteId) {
         Residente r = residenteRepo.findById(residenteId)
                 .orElseThrow(() -> new RecursoNoEncontradoException("Residente", residenteId));
+        // si ya tenia un pase, el viejo deja de servir (por ejemplo si lo perdio)
+        paseRepo.findByResidenteIdAndTipoAndActivoTrue(residenteId, TipoPase.RESIDENTE)
+                .forEach(viejo -> viejo.setActivo(false));
         PaseQR pase = nuevoPase(TipoPase.RESIDENTE);
         pase.setResidente(r);
         return PaseResponse.from(paseRepo.save(pase));
@@ -43,6 +46,7 @@ public class PaseService {
     public PaseResponse crearParaTrabajador(Long trabajadorId) {
         Trabajador t = trabajadorRepo.findById(trabajadorId)
                 .orElseThrow(() -> new RecursoNoEncontradoException("Trabajador", trabajadorId));
+        paseRepo.findByTrabajadorIdAndActivoTrue(trabajadorId).forEach(viejo -> viejo.setActivo(false));
         PaseQR pase = nuevoPase(TipoPase.TRABAJADOR);
         pase.setTrabajador(t);
         return PaseResponse.from(paseRepo.save(pase));

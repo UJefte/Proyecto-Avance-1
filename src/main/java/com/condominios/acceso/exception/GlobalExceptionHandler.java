@@ -14,7 +14,8 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.support.MissingServletRequestPartException;
 
-@RestControllerAdvice
+// solo para los controladores del API, el panel web maneja sus propios errores
+@RestControllerAdvice(basePackages = "com.condominios.acceso.controller")
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(RecursoNoEncontradoException.class)

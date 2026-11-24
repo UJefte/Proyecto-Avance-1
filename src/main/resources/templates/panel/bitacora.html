@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head th:replace="~{fragmentos :: cabeza('Bitácora')}"></head>
+<body>
+<header th:replace="~{fragmentos :: menu('bitacora')}"></header>
+<main>
+    <h1>Bitácora de accesos</h1>
+
+    <table>
+        <thead>
+        <tr><th>Fecha y hora</th><th>Titular</th><th>Tipo</th><th>Movimiento</th><th>Resultado</th><th>Motivo</th></tr>
+        </thead>
+        <tbody>
+        <tr th:each="r : ${registros}">
+            <td th:text="${#temporals.format(r.fechaHora, 'dd/MM/yyyy HH:mm')}">24/11/2026 10:00</td>
+            <td th:text="${r.titular != null ? r.titular : '-'}">Ana</td>
+            <td th:text="${r.tipoPase != null ? r.tipoPase : '-'}">RESIDENTE</td>
+            <td th:text="${r.movimiento}">ENTRADA</td>
+            <td><span th:class="${r.resultado.name() == 'PERMITIDO'} ? 'etiqueta verde' : 'etiqueta roja'"
+                      th:text="${r.resultado}">PERMITIDO</span></td>
+            <td th:text="${r.motivo}">Entrada registrada</td>
+        </tr>
+        <tr th:if="${#lists.isEmpty(registros)}"><td colspan="6">Todavía no hay accesos</td></tr>
+        </tbody>
+    </table>
+</main>
+</body>
+</html>

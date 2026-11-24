@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head th:replace="~{fragmentos :: cabeza('Pases QR')}"></head>
+<body>
+<header th:replace="~{fragmentos :: menu('pases')}"></header>
+<main>
+    <h1>Pases QR</h1>
+    <div th:replace="~{fragmentos :: avisos}"></div>
+
+    <div class="fila">
+        <form class="caja" method="post" th:action="@{/panel/pases/residente}">
+            <h2>Pase para residente</h2>
+            <select name="residenteId" required>
+                <option th:each="r : ${residentes}" th:value="${r.id}" th:text="${r.nombre + ' (' + r.departamento + ')'}">Ana</option>
+            </select>
+            <button type="submit">Generar</button>
+        </form>
+        <form class="caja" method="post" th:action="@{/panel/pases/trabajador}">
+            <h2>Pase para trabajador</h2>
+            <select name="trabajadorId" required>
+                <option th:each="t : ${trabajadores}" th:value="${t.id}" th:text="${t.nombre + ' - ' + t.puesto}">Pedro</option>
+            </select>
+            <button type="submit">Generar</button>
+        </form>
+    </div>
+
+    <table>
+        <thead>
+        <tr><th>QR</th><th>Titular</th><th>Tipo</th><th>Vigencia</th><th>Usos</th><th>Estado</th><th></th></tr>
+        </thead>
+        <tbody>
+        <tr th:each="p : ${pases}">
+            <td><a th:href="@{/api/v1/pases/{id}/qr(id=${p.id})}" target="_blank">
+                <img class="qr" th:src="@{/api/v1/pases/{id}/qr(id=${p.id})}" alt="QR"></a></td>
+            <td th:text="${p.titular}">Ana</td>
+            <td th:text="${p.tipo}">RESIDENTE</td>
+            <td th:text="${p.vigenteHasta != null ? #temporals.format(p.vigenteHasta, 'dd/MM/yyyy HH:mm') : 'Permanente'}">Permanente</td>
+            <td th:text="${p.usosMaximos != null ? p.usosActuales + ' / ' + p.usosMaximos : p.usosActuales}">0</td>
+            <td><span th:class="${p.activo} ? 'etiqueta verde' : 'etiqueta gris'" th:text="${p.activo} ? 'Activo' : 'Inactivo'">Activo</span></td>
+            <td>
+                <form th:if="${p.activo}" method="post" th:action="@{/panel/pases/{id}/desactivar(id=${p.id})}">
+                    <button class="secundario" type="submit">Desactivar</button>
+                </form>
+            </td>
+        </tr>
+        <tr th:if="${#lists.isEmpty(pases)}"><td colspan="7">No hay pases</td></tr>
+        </tbody>
+    </table>
+</main>
+</body>
+</html>

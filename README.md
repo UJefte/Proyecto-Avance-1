@@ -16,6 +16,7 @@ trabajadores y visitas de un condominio con pases QR.
 - El guardia escanea el QR, ya sea mandando el código o **la foto del QR**, y el sistema registra la **entrada o salida** (PERMITIDO / DENEGADO + motivo).
 - Visitas sin QR: el guardia las registra y el residente aprueba o rechaza. Al aprobar se genera un pase de un solo uso.
 - Bitácora de accesos.
+- **Panel web** sencillo (Thymeleaf) con inicio, residentes, pases QR, caseta del guardia y bitácora.
 
 ## Diagramas
 
@@ -23,9 +24,9 @@ trabajadores y visitas de un condominio con pases QR.
 
 ```mermaid
 flowchart LR
-    U[Guardia / Residente / Admin] --> F[Frontend web]
+    U[Guardia / Residente / Admin] --> F[Panel web<br/>Thymeleaf]
     U --> P[Postman / K6]
-    F -->|HTTP JSON| API[API Spring Boot<br/>/api/v1]
+    F --> API[Spring Boot<br/>/api/v1 y /panel]
     P -->|HTTP JSON| API
     API --> DB[(PostgreSQL<br/>Neon o Railway)]
     API --> QR[ZXing<br/>genera y lee QR]
@@ -90,6 +91,7 @@ docker compose up --build
 
 Esto levanta Postgres y el API. Al arrancar se cargan datos de ejemplo (3 departamentos, 2 residentes y 1 trabajador con sus pases).
 
+- Panel web: http://localhost:8080/panel
 - Swagger: http://localhost:8080/swagger-ui.html
 - Salud del servidor: http://localhost:8080/actuator/health
 
@@ -190,6 +192,7 @@ k6 run -e BASE_URL=https://TU-APP.up.railway.app k6/carga.js
 src/main/java/com/condominios/acceso
 ├── config       # datos de ejemplo, CORS y Swagger
 ├── controller   # endpoints REST (/api/v1)
+├── web          # pantallas del panel (@Controller + plantillas)
 ├── service      # reglas de negocio (validación del QR, solicitudes, ZXing)
 ├── repository   # acceso a datos (Spring Data JPA)
 ├── entity       # entidades y enums
@@ -204,5 +207,5 @@ pruebas/
 ## Pendiente
 
 Login con JWT y roles, tablas de catálogo, correo al residente, reportes PDF/Excel de la bitácora,
-almacén de archivos (fotos de identificación), parte administrativa web, idempotencia, webhook,
+almacén de archivos (fotos de identificación), idempotencia, webhook,
 tarea programada y consumo de un servicio externo.

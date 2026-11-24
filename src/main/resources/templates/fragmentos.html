@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<!-- partes que se repiten en todas las pantallas -->
+<head th:fragment="cabeza(titulo)">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="${titulo} + ' | Control de acceso'">Control de acceso</title>
+    <link rel="stylesheet" th:href="@{/css/estilos.css}">
+</head>
+<body>
+<header th:fragment="menu(activo)" class="menu">
+    <span class="marca">Control de acceso</span>
+    <nav>
+        <a th:href="@{/panel}" th:classappend="${activo == 'inicio'} ? 'activo'">Inicio</a>
+        <a th:href="@{/panel/residentes}" th:classappend="${activo == 'residentes'} ? 'activo'">Residentes</a>
+        <a th:href="@{/panel/pases}" th:classappend="${activo == 'pases'} ? 'activo'">Pases QR</a>
+        <a th:href="@{/panel/caseta}" th:classappend="${activo == 'caseta'} ? 'activo'">Caseta</a>
+        <a th:href="@{/panel/bitacora}" th:classappend="${activo == 'bitacora'} ? 'activo'">Bitácora</a>
+    </nav>
+</header>
+
+<div th:fragment="avisos">
+    <p class="aviso ok" th:if="${ok}" th:text="${ok}"></p>
+    <p class="aviso error" th:if="${error}" th:text="${error}"></p>
+</div>
+</body>
+</html>

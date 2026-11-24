@@ -10,6 +10,7 @@ import com.condominios.acceso.entity.Trabajador;
 import com.condominios.acceso.repository.PaseQRRepository;
 import com.condominios.acceso.repository.RegistroAccesoRepository;
 import java.io.InputStream;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Arrays;
@@ -75,6 +76,12 @@ public class AccesoService {
     @Transactional(readOnly = true)
     public List<AccesoResponse> bitacora() {
         return registroRepo.findAllByOrderByFechaHoraDesc().stream().map(AccesoResponse::from).toList();
+    }
+
+    // cuantos escaneos van en el dia (para el panel)
+    @Transactional(readOnly = true)
+    public long accesosDeHoy() {
+        return registroRepo.countByFechaHoraAfter(LocalDate.now().atStartOfDay());
     }
 
     /** Devuelve null si la entrada es válida; si no, el motivo de la denegación. */

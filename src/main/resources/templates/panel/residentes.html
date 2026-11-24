@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head th:replace="~{fragmentos :: cabeza('Residentes')}"></head>
+<body>
+<header th:replace="~{fragmentos :: menu('residentes')}"></header>
+<main>
+    <h1>Residentes</h1>
+    <div th:replace="~{fragmentos :: avisos}"></div>
+
+    <form class="caja" method="post" th:action="@{/panel/residentes}">
+        <h2>Registrar residente</h2>
+        <label>Nombre <input name="nombre" required></label>
+        <label>Correo <input name="correo" type="email" required></label>
+        <label>Departamento
+            <select name="departamentoId" required>
+                <option th:each="d : ${departamentos}" th:value="${d.id}"
+                        th:text="${d.torre != null ? d.torre + '-' + d.numero : d.numero}">A-101</option>
+            </select>
+        </label>
+        <button type="submit">Guardar</button>
+    </form>
+
+    <table>
+        <thead>
+        <tr><th>#</th><th>Nombre</th><th>Correo</th><th>Departamento</th></tr>
+        </thead>
+        <tbody>
+        <tr th:each="r : ${residentes}">
+            <td th:text="${r.id}">1</td>
+            <td th:text="${r.nombre}">Ana</td>
+            <td th:text="${r.correo}">ana@correo.com</td>
+            <td th:text="${r.departamento}">A-101</td>
+        </tr>
+        <tr th:if="${#lists.isEmpty(residentes)}"><td colspan="4">No hay residentes</td></tr>
+        </tbody>
+    </table>
+</main>
+</body>
+</html>
