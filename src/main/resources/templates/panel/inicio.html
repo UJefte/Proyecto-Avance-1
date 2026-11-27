@@ -2,28 +2,38 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="es">
 <head th:replace="~{fragmentos :: cabeza('Inicio')}"></head>
 <body>
-<header th:replace="~{fragmentos :: menu('inicio')}"></header>
+<aside th:replace="~{fragmentos :: menu('inicio')}"></aside>
 <main>
-    <h1>Panel del condominio</h1>
+    <p class="fecha" th:text="${#temporals.format(#temporals.createNow(), 'EEEE d ''de'' MMMM, yyyy')}">jueves 26 de noviembre, 2026</p>
+    <h1>Resumen del condominio</h1>
 
-    <div class="tarjetas">
-        <div class="tarjeta">
+    <!-- un solo panel con los numeros del dia -->
+    <section class="resumen">
+        <a class="dato" th:href="@{/panel/residentes}">
             <span class="numero" th:text="${totalResidentes}">0</span>
             <span>Residentes</span>
-        </div>
-        <div class="tarjeta">
+        </a>
+        <a class="dato" th:href="@{/panel/pases}">
             <span class="numero" th:text="${pasesActivos}">0</span>
             <span>Pases activos</span>
-        </div>
-        <div class="tarjeta">
+        </a>
+        <a class="dato" th:href="@{/panel/bitacora}">
             <span class="numero" th:text="${accesosHoy}">0</span>
             <span>Escaneos de hoy</span>
-        </div>
-        <div class="tarjeta">
+        </a>
+        <div class="dato" th:classappend="${pendientes > 0} ? 'pendiente'">
             <span class="numero" th:text="${pendientes}">0</span>
             <span>Visitas por aprobar</span>
         </div>
-    </div>
+    </section>
+
+    <section class="atajo">
+        <div>
+            <h2>¿Llegó alguien a la caseta?</h2>
+            <p>Escanea su pase con la cámara y el sistema registra la entrada o la salida.</p>
+        </div>
+        <a class="boton" th:href="@{/panel/escanear}">Escanear pase</a>
+    </section>
 
     <p class="nota">La documentación del API está en <a th:href="@{/swagger-ui.html}">Swagger</a>.</p>
 </main>

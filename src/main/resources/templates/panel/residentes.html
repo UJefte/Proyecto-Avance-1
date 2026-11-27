@@ -2,13 +2,14 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="es">
 <head th:replace="~{fragmentos :: cabeza('Residentes')}"></head>
 <body>
-<header th:replace="~{fragmentos :: menu('residentes')}"></header>
+<aside th:replace="~{fragmentos :: menu('residentes')}"></aside>
 <main>
     <h1>Residentes</h1>
     <div th:replace="~{fragmentos :: avisos}"></div>
 
     <form class="caja" method="post" th:action="@{/panel/residentes}">
         <h2>Registrar residente</h2>
+        <div class="campos">
         <label>Nombre <input name="nombre" required></label>
         <label>Correo <input name="correo" type="email" required
                          pattern="[^@\s]+@[^@\s]+\.[a-zA-Z]{2,}" title="Ejemplo: nombre@dominio.com"></label>
@@ -18,6 +19,7 @@
                         th:text="${d.torre != null ? d.torre + '-' + d.numero : d.numero}">A-101</option>
             </select>
         </label>
+        </div>
         <button type="submit">Guardar</button>
     </form>
 

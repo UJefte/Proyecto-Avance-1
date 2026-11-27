@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="es">
 <head th:replace="~{fragmentos :: cabeza('Escanear QR')}"></head>
-<body>
-<header th:replace="~{fragmentos :: menu('caseta')}"></header>
+<!-- la caseta usa el tema oscuro (vigilancia) -->
+<body class="vigilancia">
+<aside th:replace="~{fragmentos :: menu('caseta')}"></aside>
 <main>
     <h1>Escanear QR con la cámara</h1>
     <p class="nota">Pon el código QR frente a la cámara. Al leerlo se valida solo.</p>
@@ -21,7 +22,7 @@
         <p class="nota" id="res-regreso"></p>
     </div>
 
-    <p>
+    <p class="acciones">
         <button type="button" id="otro" hidden>Escanear otro</button>
         <a th:href="@{/panel/caseta}">Volver a la caseta</a>
     </p>

@@ -998,7 +998,7 @@
             },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"nombreVisitante\": \"Repartidor Amazon\",\n  \"tipo\": \"REPARTIDOR\",\n  \"residenteId\": {{residenteId}},\n  \"motivo\": \"Entrega de paquete\"\n}",
+              "raw": "{\n  \"nombreVisitante\": \"Repartidor de paqueteria\",\n  \"tipo\": \"REPARTIDOR\",\n  \"residenteId\": {{residenteId}},\n  \"motivo\": \"Entrega de paquete\"\n}",
               "options": {
                 "raw": {
                   "language": "json"

@@ -4,12 +4,16 @@
 <head th:fragment="cabeza(titulo)">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title th:text="${titulo} + ' | Control de acceso'">Control de acceso</title>
+    <title th:text="${titulo} + ' | Jefté Grand'">Jefté Grand</title>
     <link rel="stylesheet" th:href="@{/css/estilos.css}">
 </head>
 <body>
-<header th:fragment="menu(activo)" class="menu">
-    <span class="marca">Control de acceso</span>
+<!-- menu lateral con el nombre del condominio -->
+<aside th:fragment="menu(activo)" class="lateral">
+    <a class="marca" th:href="@{/panel}">
+        <span class="marca-nombre">Jefté Grand</span>
+        <span class="marca-sub">Acceso privado</span>
+    </a>
     <nav>
         <a th:href="@{/panel}" th:classappend="${activo == 'inicio'} ? 'activo'">Inicio</a>
         <a th:href="@{/panel/residentes}" th:classappend="${activo == 'residentes'} ? 'activo'">Residentes</a>
@@ -17,7 +21,8 @@
         <a th:href="@{/panel/caseta}" th:classappend="${activo == 'caseta'} ? 'activo'">Caseta</a>
         <a th:href="@{/panel/bitacora}" th:classappend="${activo == 'bitacora'} ? 'activo'">Bitácora</a>
     </nav>
-</header>
+    <p class="lateral-pie">La tranquilidad de pertenecer.</p>
+</aside>
 
 <div th:fragment="avisos">
     <p class="aviso ok" th:if="${ok}" th:text="${ok}"></p>

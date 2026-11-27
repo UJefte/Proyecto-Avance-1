@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="es">
 <head th:replace="~{fragmentos :: cabeza('Pases QR')}"></head>
 <body>
-<header th:replace="~{fragmentos :: menu('pases')}"></header>
+<aside th:replace="~{fragmentos :: menu('pases')}"></aside>
 <main>
     <h1>Pases QR</h1>
     <div th:replace="~{fragmentos :: avisos}"></div>
@@ -33,7 +33,7 @@
             <td><a th:href="@{/api/v1/pases/{id}/qr(id=${p.id})}" target="_blank">
                 <img class="qr" th:src="@{/api/v1/pases/{id}/qr(id=${p.id})}" alt="QR"></a></td>
             <td th:text="${p.titular}">Ana</td>
-            <td th:text="${p.tipo}">RESIDENTE</td>
+            <td th:text="${#strings.capitalize(#strings.toLowerCase(p.tipo))}">Residente</td>
             <td th:text="${p.vigenteHasta != null ? #temporals.format(p.vigenteHasta, 'dd/MM/yyyy HH:mm') : 'Permanente'}">Permanente</td>
             <td th:text="${p.usosMaximos != null ? p.usosActuales + ' / ' + p.usosMaximos : p.usosActuales}">0</td>
             <td><span th:class="${p.activo} ? 'etiqueta verde' : 'etiqueta gris'" th:text="${p.activo} ? 'Activo' : 'Inactivo'">Activo</span></td>

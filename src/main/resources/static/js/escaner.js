@@ -75,8 +75,8 @@ function mostrarResultado(datos) {
 
     document.getElementById("res-titulo").textContent = datos.resultado;
     document.getElementById("res-titular").textContent = datos.titular || "Desconocido";
-    document.getElementById("res-tipo").textContent = datos.tipoPase ? "(" + datos.tipoPase + ")" : "";
-    document.getElementById("res-detalle").textContent = datos.movimiento + " - " + datos.motivo;
+    document.getElementById("res-tipo").textContent = datos.tipoPase ? "· " + datos.tipoPase.toLowerCase() : "";
+    document.getElementById("res-detalle").textContent = datos.motivo;
     document.getElementById("otro").hidden = false;
 
     // cuenta regresiva y luego a la bitacora

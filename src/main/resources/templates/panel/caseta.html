@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="es">
 <head th:replace="~{fragmentos :: cabeza('Caseta')}"></head>
-<body>
-<header th:replace="~{fragmentos :: menu('caseta')}"></header>
+<!-- la caseta usa el tema oscuro (vigilancia) -->
+<body class="vigilancia">
+<aside th:replace="~{fragmentos :: menu('caseta')}"></aside>
 <main>
     <h1>Caseta de vigilancia</h1>
 
-    <p><a class="boton" th:href="@{/panel/escanear}">Escanear con la cámara</a></p>
+    <p class="acciones"><a class="boton" th:href="@{/panel/escanear}">Escanear con la cámara</a></p>
 
     <div class="fila">
         <form class="caja" method="post" th:action="@{/panel/caseta}">
@@ -27,8 +28,8 @@
          th:classappend="${resultado.resultado.name() == 'PERMITIDO'} ? 'permitido' : 'denegado'">
         <h2 th:text="${resultado.resultado}">PERMITIDO</h2>
         <p><strong th:text="${resultado.titular != null ? resultado.titular : 'Desconocido'}">Ana</strong>
-            <span th:if="${resultado.tipoPase}" th:text="'(' + ${resultado.tipoPase} + ')'"></span></p>
-        <p th:text="${resultado.movimiento} + ' - ' + ${resultado.motivo}">ENTRADA - Entrada registrada</p>
+            <span th:if="${resultado.tipoPase}" th:text="'· ' + ${#strings.toLowerCase(resultado.tipoPase)}"></span></p>
+        <p th:text="${resultado.motivo}">ENTRADA - Entrada registrada</p>
         <p class="nota" th:text="${#temporals.format(resultado.fechaHora, 'dd/MM/yyyy HH:mm:ss')}"></p>
     </div>
 </main>
