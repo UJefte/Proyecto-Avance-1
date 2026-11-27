@@ -3,8 +3,10 @@ package com.condominios.acceso;
 import java.util.TimeZone;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.scheduling.annotation.EnableAsync;
 
 @SpringBootApplication
+@EnableAsync // para mandar los correos sin hacer esperar al guardia
 public class CondominiosAccesoApplication {
 
     public static void main(String[] args) {

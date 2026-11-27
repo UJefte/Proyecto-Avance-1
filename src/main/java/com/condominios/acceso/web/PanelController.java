@@ -2,10 +2,14 @@ package com.condominios.acceso.web;
 
 import com.condominios.acceso.dto.AccesoResponse;
 import com.condominios.acceso.dto.ResidenteRequest;
+import com.condominios.acceso.dto.SolicitudResponse;
+import com.condominios.acceso.dto.VisitaSinQrRequest;
+import com.condominios.acceso.entity.TipoVisita;
 import com.condominios.acceso.entity.EstadoSolicitud;
 import com.condominios.acceso.exception.RecursoNoEncontradoException;
 import com.condominios.acceso.exception.ReglaNegocioException;
 import com.condominios.acceso.service.AccesoService;
+import com.condominios.acceso.service.ArchivoService;
 import com.condominios.acceso.service.DepartamentoService;
 import com.condominios.acceso.service.PaseService;
 import com.condominios.acceso.service.ResidenteService;
@@ -40,6 +44,7 @@ public class PanelController {
     private final AccesoService accesoService;
     private final SolicitudService solicitudService;
     private final Validator validator;
+    private final ArchivoService archivoService;
 
     @GetMapping("/")
     public String raiz() {
@@ -119,13 +124,36 @@ public class PanelController {
     // ---------- caseta (lo que usa el guardia) ----------
 
     @GetMapping("/panel/caseta")
-    public String caseta() {
-        return "panel/caseta";
+    public String caseta(Model model) {
+        return pantallaCaseta(model);
     }
 
     @PostMapping("/panel/caseta")
     public String escanear(@RequestParam String codigo, Model model) {
         model.addAttribute("resultado", accesoService.validar(codigo.trim()));
+        return pantallaCaseta(model);
+    }
+
+    // llega alguien sin QR: el guardia lo registra (con foto si quiere) y se avisa al residente
+    @PostMapping("/panel/caseta/visita")
+    public String visitaSinQr(@RequestParam String nombreVisitante, @RequestParam TipoVisita tipo,
+                              @RequestParam Long residenteId, @RequestParam(required = false) String motivo,
+                              @RequestParam(required = false) MultipartFile foto, RedirectAttributes flash) {
+        try {
+            String fotoUrl = (foto != null && !foto.isEmpty()) ? archivoService.guardarFoto(foto) : null;
+            SolicitudResponse s = solicitudService.crear(
+                    new VisitaSinQrRequest(nombreVisitante.trim(), tipo, residenteId, motivo, fotoUrl));
+            flash.addFlashAttribute("ok", "Visita registrada. Se avisó a " + s.residente() + " por correo para que la apruebe.");
+        } catch (ReglaNegocioException | RecursoNoEncontradoException e) {
+            flash.addFlashAttribute("error", e.getMessage());
+        }
+        return "redirect:/panel/caseta";
+    }
+
+    // la caseta necesita la lista de residentes y los tipos de visita para el formulario
+    private String pantallaCaseta(Model model) {
+        model.addAttribute("residentes", residenteService.listar());
+        model.addAttribute("tiposVisita", TipoVisita.values());
         return "panel/caseta";
     }
 
@@ -143,7 +171,28 @@ public class PanelController {
         } catch (ReglaNegocioException e) {
             model.addAttribute("error", e.getMessage());
         }
-        return "panel/caseta";
+        return pantallaCaseta(model);
+    }
+
+    // ---------- visitas sin QR (las aprueba el residente) ----------
+
+    @GetMapping("/panel/visitas")
+    public String visitas(Model model) {
+        model.addAttribute("solicitudes", solicitudService.listar(null));
+        return "panel/visitas";
+    }
+
+    @PostMapping("/panel/visitas/{id}/resolver")
+    public String resolver(@PathVariable Long id, @RequestParam boolean aprobada, RedirectAttributes flash) {
+        try {
+            SolicitudResponse s = solicitudService.resolver(id, aprobada);
+            flash.addFlashAttribute("ok", aprobada
+                    ? s.visitante() + " puede pasar. Se generó un pase de un solo uso."
+                    : "Visita de " + s.visitante() + " rechazada.");
+        } catch (ReglaNegocioException | RecursoNoEncontradoException e) {
+            flash.addFlashAttribute("error", e.getMessage());
+        }
+        return "redirect:/panel/visitas";
     }
 
     // ---------- bitacora ----------

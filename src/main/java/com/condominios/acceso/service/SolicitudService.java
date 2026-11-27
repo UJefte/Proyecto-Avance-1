@@ -28,6 +28,7 @@ public class SolicitudService {
     private final ResidenteRepository residenteRepo;
     private final VisitaRepository visitaRepo;
     private final PaseService paseService;
+    private final NotificacionService notificacionService;
 
     @Transactional
     public SolicitudResponse crear(VisitaSinQrRequest req) {
@@ -45,7 +46,12 @@ public class SolicitudService {
         s.setVisita(v);
         s.setResidente(anfitrion);
         s.setMotivo(req.motivo());
-        return SolicitudResponse.from(solicitudRepo.save(s));
+        SolicitudResponse respuesta = SolicitudResponse.from(solicitudRepo.save(s));
+
+        // avisarle al residente por correo que alguien lo espera
+        notificacionService.visitaEnCaseta(anfitrion.getCorreo(), anfitrion.getNombre(),
+                v.getNombre(), v.getTipo().name(), req.motivo(), req.fotoUrl());
+        return respuesta;
     }
 
     @Transactional(readOnly = true)

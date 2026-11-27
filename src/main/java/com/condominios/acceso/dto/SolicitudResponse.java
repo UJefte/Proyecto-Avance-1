@@ -15,7 +15,8 @@ public record SolicitudResponse(
         EstadoSolicitud estado,
         LocalDateTime creadaEn,
         LocalDateTime resueltaEn,
-        String codigoPase) {
+        String codigoPase,
+        String fotoUrl) {
 
     public static SolicitudResponse from(SolicitudVisita s) {
         return new SolicitudResponse(
@@ -28,6 +29,7 @@ public record SolicitudResponse(
                 s.getEstado(),
                 s.getCreadaEn(),
                 s.getResueltaEn(),
-                s.getPase() != null ? s.getPase().getCodigo() : null);
+                s.getPase() != null ? s.getPase().getCodigo() : null,
+                s.getVisita().getFotoUrl());
     }
 }

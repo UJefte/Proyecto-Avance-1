@@ -14,9 +14,11 @@ trabajadores y visitas de un condominio con pases QR.
   (únicos o recurrentes, con vigencia y días permitidos).
 - Regresa la **imagen PNG del QR** de cada pase (ZXing).
 - El guardia escanea el QR **con la cámara** (webcam o celular, en JavaScript), escribiendo el código o subiendo **la foto del QR**, y el sistema registra la **entrada o salida** (PERMITIDO / DENEGADO + motivo).
-- Visitas sin QR: el guardia las registra y el residente aprueba o rechaza. Al aprobar se genera un pase de un solo uso.
+- Visitas sin QR: el guardia las registra **con foto** (se guarda en la carpeta `imagenes`) y el residente aprueba o rechaza. Al aprobar se genera un pase de un solo uso.
+- **Correo al residente** (plantilla HTML) cuando llega una visita sin QR y cuando su visita entra con su pase.
+- **Reportes de la bitácora en PDF y Excel.**
 - Bitácora de accesos.
-- **Panel web** sencillo (Thymeleaf) con inicio, residentes, pases QR, caseta del guardia y bitácora.
+- **Panel web** (Thymeleaf) con inicio, residentes, pases QR, caseta del guardia, visitas y bitácora.
 
 ## Diagramas
 
@@ -30,8 +32,9 @@ flowchart LR
     P -->|HTTP JSON| API
     API --> DB[(PostgreSQL<br/>Neon o Railway)]
     API --> QR[ZXing<br/>genera y lee QR]
-    API -.-> MAIL[Correo SMTP<br/>pendiente]
-    API -.-> ARCH[Almacén de archivos<br/>pendiente]
+    API --> MAIL[Correo SMTP<br/>Mailpit en local]
+    API --> ARCH[Carpeta imagenes<br/>fotos de visitas]
+    API --> REP[Reportes<br/>PDF y Excel]
 ```
 
 ### 2. Casos de uso por rol
@@ -89,9 +92,11 @@ Solo necesitas Docker Desktop abierto.
 docker compose up --build
 ```
 
-Esto levanta Postgres y el API. Al arrancar se cargan datos de ejemplo (3 departamentos, 2 residentes y 1 trabajador con sus pases).
+Esto levanta Postgres, el API y **Mailpit** (buzón de correo de prueba). Al arrancar se cargan datos de ejemplo (3 departamentos, 2 residentes y 1 trabajador con sus pases).
 
 - Panel web: http://localhost:8080/panel
+- Correos que manda el sistema: http://localhost:8025
+- Fotos subidas: carpeta `imagenes/` del proyecto
 - Swagger: http://localhost:8080/swagger-ui.html
 - Salud del servidor: http://localhost:8080/actuator/health
 
@@ -117,6 +122,14 @@ Copia `src/main/resources/local.properties.example` como `local.properties` y po
 | `DB_PASSWORD` | Contraseña | `postgres` |
 | `PORT` | Puerto del API | `8080` |
 | `DATOS_SEMILLA` | Cargar datos de ejemplo | `true` |
+| `CARPETA_IMAGENES` | Carpeta donde se guardan las fotos | `imagenes` |
+| `CORREO_ACTIVO` | Mandar correos (si es `false` solo se escriben en el log) | `false` |
+| `MAIL_HOST`, `MAIL_PORT` | Servidor de correo | `localhost`, `1025` |
+| `MAIL_USER`, `MAIL_PASSWORD`, `MAIL_AUTH`, `MAIL_TLS` | Para un correo real (por ejemplo Gmail) | vacíos |
+| `URL_PANEL` | Dirección del panel que va en los correos | `http://localhost:8080` |
+
+Para mandar correos reales con Gmail: `MAIL_HOST=smtp.gmail.com`, `MAIL_PORT=587`, `MAIL_AUTH=true`, `MAIL_TLS=true`,
+`MAIL_USER=tu correo` y `MAIL_PASSWORD=` una *contraseña de aplicación* de Google.
 
 ### Escanear con el celular
 
@@ -161,6 +174,9 @@ Todos empiezan con `/api/v1`. La lista completa con ejemplos está en Swagger.
 | GET | `/accesos` | Bitácora de accesos |
 | POST | `/accesos/visita-sin-qr` | Guardia registra visita sin QR |
 | GET | `/solicitudes?estado=PENDIENTE` | Solicitudes de visitas |
+| POST | `/archivos/fotos` | Sube la foto de una visita (form-data, campo `foto`) |
+| GET | `/reportes/bitacora.pdf` | Bitácora en PDF |
+| GET | `/reportes/bitacora.xlsx` | Bitácora en Excel |
 | PUT | `/solicitudes/{id}/resolver` | Residente aprueba o rechaza (`{"aprobada": true}`) |
 
 ## Pruebas
@@ -169,8 +185,8 @@ Están en la carpeta `pruebas/`. Los reportes HTML se guardan en `pruebas/report
 
 ### Postman
 
-La colección `pruebas/postman/condominios.postman_collection.json` tiene 32 peticiones en 6 carpetas
-(salud, registro, pases, accesos, visita sin QR y errores), cada una con sus tests.
+La colección `pruebas/postman/condominios.postman_collection.json` tiene 37 peticiones en 7 carpetas
+(salud, registro, pases, accesos, visita sin QR, errores, y fotos y reportes), cada una con sus tests.
 Se corre completa en orden porque cada petición guarda datos para la siguiente.
 
 - En Postman: **Import** la colección y el entorno `local`, luego **Run collection**.

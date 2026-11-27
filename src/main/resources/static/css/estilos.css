@@ -135,6 +135,13 @@ a.dato:hover { background: #f1ede4; }
     margin-bottom: 24px;
 }
 .campos { display: grid; grid-template-columns: 1.2fr 1.2fr 0.8fr; gap: 16px; }
+.campos.dos { grid-template-columns: 1fr 1fr; }
+.visita-sin-qr { margin-top: 32px; }
+img.foto { width: 64px; height: 64px; object-fit: cover; display: block; border-radius: 3px; border: 1px solid var(--caliza); }
+.sin-foto { font-size: 12px; color: var(--mineral); }
+td.botones { white-space: nowrap; }
+td.botones form { display: inline-block; margin-right: 6px; }
+td.botones button { margin: 0; padding: 7px 14px; }
 .caja label { display: block; margin-bottom: 14px; font-weight: 500; font-size: 14px; }
 input, select {
     width: 100%;
@@ -179,6 +186,7 @@ img.qr { width: 56px; height: 56px; display: block; border: 1px solid var(--cali
 .etiqueta { display: inline-block; padding: 2px 10px; font-size: 12px; font-weight: 500; border-radius: 999px; border: 1px solid; }
 .verde { color: var(--autorizado); border-color: #b5cbbe; background: #eef4f0; }
 .roja { color: var(--denegado); border-color: #e0bfbb; background: #f8eeec; }
+.ambar { color: var(--pendiente); border-color: #e2cfa8; background: #f8f1e3; }
 .gris { color: var(--mineral); border-color: var(--caliza); background: #f1eee6; }
 
 .aviso { padding: 10px 14px; border-left: 2px solid; border-radius: 2px; }
@@ -187,6 +195,9 @@ img.qr { width: 56px; height: 56px; display: block; border: 1px solid var(--cali
 
 .acciones { margin: 0 0 24px; }
 .acciones button + a { margin-left: 16px; }
+.acciones a.boton + a.boton { margin-left: 8px; }
+a.boton.claro { background: transparent; color: var(--obsidiana); }
+a.boton.claro:hover { background: #ece7dc; }
 
 /* ---------- caseta: tema oscuro de vigilancia ---------- */
 
@@ -196,7 +207,10 @@ body.vigilancia h1, body.vigilancia h2 { color: var(--marfil); }
 body.vigilancia a { color: var(--caliza); }
 body.vigilancia .nota { color: var(--mineral); }
 body.vigilancia .caja { background: var(--obsidiana); border-color: #2f322e; }
-body.vigilancia input { background: #111311; color: var(--marfil); border-color: #3a3d38; }
+body.vigilancia input, body.vigilancia select { background: #111311; color: var(--marfil); border-color: #3a3d38; }
+body.vigilancia .caja label { color: var(--caliza); }
+body.vigilancia .aviso.ok { background: #1c2a23; color: #9cc6b0; }
+body.vigilancia .aviso.error { background: #2e1d1c; color: #e0a39d; }
 body.vigilancia button { background: var(--marfil); color: var(--obsidiana); border-color: var(--marfil); }
 body.vigilancia button:hover { background: #fff; }
 body.vigilancia a.boton { background: var(--champan); border-color: var(--champan); color: var(--obsidiana); }

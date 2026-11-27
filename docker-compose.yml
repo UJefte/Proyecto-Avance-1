@@ -1,6 +1,8 @@
 # Levanta la base de datos y el API juntos:
 #   docker compose up --build
+# Panel: http://localhost:8080/panel
 # API: http://localhost:8080/swagger-ui.html
+# Correos de prueba: http://localhost:8025
 services:
   db:
     image: postgres:16
@@ -25,12 +27,30 @@ services:
     depends_on:
       db:
         condition: service_healthy
+      correo:
+        condition: service_started
     environment:
       DB_URL: jdbc:postgresql://db:5432/condominios
       DB_USER: postgres
       DB_PASSWORD: postgres
+      # las fotos se guardan en la carpeta imagenes del proyecto
+      CARPETA_IMAGENES: /app/imagenes
+      # los correos llegan al buzon de prueba (Mailpit)
+      CORREO_ACTIVO: "true"
+      MAIL_HOST: correo
+      MAIL_PORT: 1025
+    volumes:
+      - ./imagenes:/app/imagenes
     ports:
       - "8080:8080"
+
+  # buzon de correo de prueba: los correos no salen a internet, se ven en http://localhost:8025
+  correo:
+    image: axllent/mailpit
+    container_name: condominios-correo
+    ports:
+      - "8025:8025"
+      - "1025:1025"
 
 volumes:
   datos-postgres:

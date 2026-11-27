@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head th:replace="~{fragmentos :: cabeza('Visitas')}"></head>
+<body>
+<aside th:replace="~{fragmentos :: menu('visitas')}"></aside>
+<main>
+    <h1>Visitas sin pase</h1>
+    <p class="nota">Personas que llegaron a la caseta sin QR. El residente decide si pueden pasar.</p>
+    <div th:replace="~{fragmentos :: avisos}"></div>
+
+    <table>
+        <thead>
+        <tr><th>Foto</th><th>Visita</th><th>Viene a ver a</th><th>Motivo</th><th>Llegó</th><th>Estado</th><th></th></tr>
+        </thead>
+        <tbody>
+        <tr th:each="s : ${solicitudes}">
+            <td>
+                <a th:if="${s.fotoUrl}" th:href="@{${s.fotoUrl}}" target="_blank"><img class="foto" th:src="@{${s.fotoUrl}}" alt="Foto"></a>
+                <span th:unless="${s.fotoUrl}" class="sin-foto">Sin foto</span>
+            </td>
+            <td><span th:text="${s.visitante}">Carlos</span><br>
+                <span class="nota" th:text="${#strings.capitalize(#strings.toLowerCase(s.tipo))}">Repartidor</span></td>
+            <td th:text="${s.residente}">Ana</td>
+            <td th:text="${s.motivo != null and !#strings.isEmpty(s.motivo) ? s.motivo : '-'}">Paquete</td>
+            <td th:text="${#temporals.format(s.creadaEn, 'dd/MM HH:mm')}">26/11 20:00</td>
+            <td>
+                <span th:if="${s.estado.name() == 'PENDIENTE'}" class="etiqueta ambar">Pendiente</span>
+                <span th:if="${s.estado.name() == 'APROBADA'}" class="etiqueta verde">Aprobada</span>
+                <span th:if="${s.estado.name() == 'RECHAZADA'}" class="etiqueta roja">Rechazada</span>
+            </td>
+            <td class="botones">
+                <th:block th:if="${s.estado.name() == 'PENDIENTE'}">
+                    <form method="post" th:action="@{/panel/visitas/{id}/resolver(id=${s.id})}">
+                        <input type="hidden" name="aprobada" value="true">
+                        <button type="submit">Aprobar</button>
+                    </form>
+                    <form method="post" th:action="@{/panel/visitas/{id}/resolver(id=${s.id})}">
+                        <input type="hidden" name="aprobada" value="false">
+                        <button class="secundario" type="submit">Rechazar</button>
+                    </form>
+                </th:block>
+            </td>
+        </tr>
+        <tr th:if="${#lists.isEmpty(solicitudes)}"><td colspan="7">No ha llegado nadie sin pase.</td></tr>
+        </tbody>
+    </table>
+</main>
+</body>
+</html>

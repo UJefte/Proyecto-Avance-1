@@ -29,6 +29,7 @@ public class AccesoService {
     private final PaseQRRepository paseRepo;
     private final RegistroAccesoRepository registroRepo;
     private final QrService qrService;
+    private final NotificacionService notificacionService;
 
     /**
      * Procesa un QR escaneado en caseta. Si el pase ya tiene una entrada sin salida,
@@ -64,6 +65,12 @@ public class AccesoService {
 
         pase.setUsosActuales(pase.getUsosActuales() + 1);
         paseRepo.save(pase);
+
+        // si es una visita, se le avisa al residente que ya entro
+        if (pase.getTipo() == TipoPase.VISITA && pase.getResidente() != null && pase.getVisita() != null) {
+            notificacionService.visitaEntro(pase.getResidente().getCorreo(), pase.getResidente().getNombre(),
+                    pase.getVisita().getNombre(), ahora);
+        }
         return guardar(pase, codigo, TipoMovimiento.ENTRADA, ahora, ResultadoAcceso.PERMITIDO, "Entrada registrada");
     }
 

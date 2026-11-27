@@ -7,3 +7,4 @@ docs/
 src/main/resources/local.properties
 src/main/resources/secrets.properties
 *.md
+imagenes/

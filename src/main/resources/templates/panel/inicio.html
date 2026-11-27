@@ -21,10 +21,10 @@
             <span class="numero" th:text="${accesosHoy}">0</span>
             <span>Escaneos de hoy</span>
         </a>
-        <div class="dato" th:classappend="${pendientes > 0} ? 'pendiente'">
+        <a class="dato" th:href="@{/panel/visitas}" th:classappend="${pendientes > 0} ? 'pendiente'">
             <span class="numero" th:text="${pendientes}">0</span>
             <span>Visitas por aprobar</span>
-        </div>
+        </a>
     </section>
 
     <section class="atajo">

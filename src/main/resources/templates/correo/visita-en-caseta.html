@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<!-- correo que le llega al residente cuando alguien llega sin QR -->
+<head><meta charset="UTF-8"></head>
+<body style="margin:0;padding:0;background:#f5f2eb;font-family:Arial,Helvetica,sans-serif;color:#23251f;">
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#f5f2eb;padding:32px 0;">
+    <tr><td align="center">
+        <table width="560" cellpadding="0" cellspacing="0" style="background:#fbfaf6;border:1px solid #d9d2c5;">
+            <tr><td style="background:#151715;padding:24px 32px;">
+                <span style="font-family:Georgia,serif;font-size:24px;color:#c4ad83;">Jefté Grand</span><br>
+                <span style="font-size:12px;letter-spacing:3px;color:#797c73;">Acceso privado</span>
+            </td></tr>
+            <tr><td style="padding:32px;">
+                <p style="margin:0 0 16px;font-size:16px;">Hola <span th:text="${residente}">Ana</span>,</p>
+                <p style="margin:0 0 20px;font-size:16px;line-height:1.5;">
+                    <strong th:text="${visitante}">Carlos Ruiz</strong> llegó a la caseta sin pase y pregunta por ti.
+                </p>
+                <table cellpadding="0" cellspacing="0" style="margin:0 0 24px;font-size:14px;color:#797c73;">
+                    <tr><td style="padding:2px 16px 2px 0;">Tipo</td><td style="color:#23251f;" th:text="${tipo}">visita</td></tr>
+                    <tr th:if="${motivo}"><td style="padding:2px 16px 2px 0;">Motivo</td><td style="color:#23251f;" th:text="${motivo}">Entrega</td></tr>
+                </table>
+                <p th:if="${foto}" style="margin:0 0 24px;">
+                    <img th:src="${foto}" alt="Foto de la visita" width="220" style="border:1px solid #d9d2c5;">
+                </p>
+                <a th:href="${enlace}" style="display:inline-block;background:#151715;color:#f5f2eb;padding:12px 22px;text-decoration:none;font-size:14px;">Aprobar o rechazar</a>
+            </td></tr>
+            <tr><td style="padding:16px 32px;border-top:1px solid #d9d2c5;font-size:12px;color:#797c73;">
+                Este aviso lo envía la caseta de Jefté Grand. Si no esperas a nadie, rechaza la visita.
+            </td></tr>
+        </table>
+    </td></tr>
+</table>
+</body>
+</html>

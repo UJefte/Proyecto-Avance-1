@@ -6,6 +6,11 @@
 <main>
     <h1>Bitácora de accesos</h1>
 
+    <p class="acciones">
+        <a class="boton" th:href="@{/api/v1/reportes/bitacora.pdf}">Descargar PDF</a>
+        <a class="boton claro" th:href="@{/api/v1/reportes/bitacora.xlsx}">Descargar Excel</a>
+    </p>
+
     <table>
         <thead>
         <tr><th>Fecha y hora</th><th>Titular</th><th>Tipo</th><th>Movimiento</th><th>Resultado</th><th>Motivo</th></tr>

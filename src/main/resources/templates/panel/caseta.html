@@ -6,6 +6,7 @@
 <aside th:replace="~{fragmentos :: menu('caseta')}"></aside>
 <main>
     <h1>Caseta de vigilancia</h1>
+    <div th:replace="~{fragmentos :: avisos}"></div>
 
     <p class="acciones"><a class="boton" th:href="@{/panel/escanear}">Escanear con la cámara</a></p>
 
@@ -22,8 +23,6 @@
         </form>
     </div>
 
-    <p class="aviso error" th:if="${error}" th:text="${error}"></p>
-
     <div th:if="${resultado}" class="resultado"
          th:classappend="${resultado.resultado.name() == 'PERMITIDO'} ? 'permitido' : 'denegado'">
         <h2 th:text="${resultado.resultado}">PERMITIDO</h2>
@@ -32,6 +31,30 @@
         <p th:text="${resultado.motivo}">ENTRADA - Entrada registrada</p>
         <p class="nota" th:text="${#temporals.format(resultado.fechaHora, 'dd/MM/yyyy HH:mm:ss')}"></p>
     </div>
+
+    <!-- llega alguien que no tiene pase: se registra y el residente decide -->
+    <form class="caja visita-sin-qr" method="post" th:action="@{/panel/caseta/visita}" enctype="multipart/form-data">
+        <h2>Llegó alguien sin pase</h2>
+        <div class="campos">
+            <label>Nombre de la visita <input name="nombreVisitante" required></label>
+            <label>Tipo
+                <select name="tipo">
+                    <option th:each="t : ${tiposVisita}" th:value="${t}"
+                            th:text="${#strings.capitalize(#strings.toLowerCase(t))}">Visita</option>
+                </select>
+            </label>
+            <label>Viene a ver a
+                <select name="residenteId" required>
+                    <option th:each="r : ${residentes}" th:value="${r.id}" th:text="${r.nombre + ' (' + r.departamento + ')'}">Ana</option>
+                </select>
+            </label>
+        </div>
+        <div class="campos dos">
+            <label>Motivo <input name="motivo" placeholder="Opcional"></label>
+            <label>Foto de la visita o su identificación <input name="foto" type="file" accept="image/jpeg,image/png,image/webp"></label>
+        </div>
+        <button type="submit">Registrar y avisar al residente</button>
+    </form>
 </main>
 </body>
 </html>
