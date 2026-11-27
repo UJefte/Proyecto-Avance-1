@@ -42,3 +42,6 @@ img.qr { width: 60px; height: 60px; }
 .resultado h2 { font-size: 28px; }
 .nota { color: #666; font-size: 13px; }
 .resultado .nota { color: #eee; }
+
+a.boton { display: inline-block; padding: 10px 18px; background: #2e7d32; color: #fff; border-radius: 4px; text-decoration: none; font-weight: bold; }
+.lector { max-width: 420px; background: #fff; border: 1px solid #ddd; border-radius: 6px; margin-bottom: 12px; }

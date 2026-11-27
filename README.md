@@ -13,7 +13,7 @@ trabajadores y visitas de un condominio con pases QR.
 - Genera un pase QR para cada residente y trabajador, y pases temporales para visitas
   (únicos o recurrentes, con vigencia y días permitidos).
 - Regresa la **imagen PNG del QR** de cada pase (ZXing).
-- El guardia escanea el QR, ya sea mandando el código o **la foto del QR**, y el sistema registra la **entrada o salida** (PERMITIDO / DENEGADO + motivo).
+- El guardia escanea el QR **con la cámara** (webcam o celular, en JavaScript), escribiendo el código o subiendo **la foto del QR**, y el sistema registra la **entrada o salida** (PERMITIDO / DENEGADO + motivo).
 - Visitas sin QR: el guardia las registra y el residente aprueba o rechaza. Al aprobar se genera un pase de un solo uso.
 - Bitácora de accesos.
 - **Panel web** sencillo (Thymeleaf) con inicio, residentes, pases QR, caseta del guardia y bitácora.
@@ -118,6 +118,12 @@ Copia `src/main/resources/local.properties.example` como `local.properties` y po
 | `PORT` | Puerto del API | `8080` |
 | `DATOS_SEMILLA` | Cargar datos de ejemplo | `true` |
 
+### Escanear con el celular
+
+La cámara del navegador solo funciona en `https` o en `localhost`. En la compu basta con `http://localhost:8080/panel/escanear`.
+En el celular se usa la versión de Railway (ya trae https). Para probar en la red local sin https, en Chrome del celular
+se puede abrir `chrome://flags`, buscar **Insecure origins treated as secure** y agregar `http://IP-DE-LA-COMPU:8080`.
+
 ## Despliegue en Railway
 
 1. Entra a [railway.app](https://railway.app) con tu cuenta de GitHub.
@@ -163,7 +169,7 @@ Están en la carpeta `pruebas/`. Los reportes HTML se guardan en `pruebas/report
 
 ### Postman
 
-La colección `pruebas/postman/condominios.postman_collection.json` tiene 31 peticiones en 6 carpetas
+La colección `pruebas/postman/condominios.postman_collection.json` tiene 32 peticiones en 6 carpetas
 (salud, registro, pases, accesos, visita sin QR y errores), cada una con sus tests.
 Se corre completa en orden porque cada petición guarda datos para la siguiente.
 

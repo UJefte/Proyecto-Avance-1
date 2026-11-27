@@ -1246,6 +1246,50 @@
           ]
         },
         {
+          "name": "Correo sin dominio completo (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Correo Mal\",\n  \"correo\": \"uriel@gmail\",\n  \"departamentoId\": {{deptoId}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/residentes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "residentes"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Responde 400\", () => pm.response.to.have.status(400));",
+                  "pm.test(\"Dice que el correo esta mal\", () => pm.expect(pm.response.json().mensaje).to.include(\"correo\"));"
+                ]
+              }
+            }
+          ]
+        },
+        {
           "name": "Residente que no existe (404)",
           "request": {
             "method": "GET",

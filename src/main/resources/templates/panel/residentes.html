@@ -10,7 +10,8 @@
     <form class="caja" method="post" th:action="@{/panel/residentes}">
         <h2>Registrar residente</h2>
         <label>Nombre <input name="nombre" required></label>
-        <label>Correo <input name="correo" type="email" required></label>
+        <label>Correo <input name="correo" type="email" required
+                         pattern="[^@\s]+@[^@\s]+\.[a-zA-Z]{2,}" title="Ejemplo: nombre@dominio.com"></label>
         <label>Departamento
             <select name="departamentoId" required>
                 <option th:each="d : ${departamentos}" th:value="${d.id}"

@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 /** Pase temporal que genera un residente para su invitado. */
 public record PaseVisitaRequest(
         @NotBlank String nombreVisitante,
-        @Email String correoVisitante,
+        @Email(regexp = "^[^@\\s]+@[^@\\s]+\\.[a-zA-Z]{2,}$", message = "debe ser un correo valido, por ejemplo nombre@dominio.com") String correoVisitante,
         @NotNull TipoVisita tipo,
         @NotNull Long residenteId,
         @NotNull LocalDateTime vigenteDesde,

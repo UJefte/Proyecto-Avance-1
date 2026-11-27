@@ -11,7 +11,10 @@ import com.condominios.acceso.service.PaseService;
 import com.condominios.acceso.service.ResidenteService;
 import com.condominios.acceso.service.SolicitudService;
 import com.condominios.acceso.service.TrabajadorService;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validator;
 import java.io.IOException;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -36,6 +39,7 @@ public class PanelController {
     private final PaseService paseService;
     private final AccesoService accesoService;
     private final SolicitudService solicitudService;
+    private final Validator validator;
 
     @GetMapping("/")
     public String raiz() {
@@ -64,8 +68,16 @@ public class PanelController {
     @PostMapping("/panel/residentes")
     public String crearResidente(@RequestParam String nombre, @RequestParam String correo,
                                  @RequestParam Long departamentoId, RedirectAttributes flash) {
+        ResidenteRequest req = new ResidenteRequest(nombre.trim(), correo.trim(), departamentoId);
+        // las mismas validaciones que el API (por ejemplo que el correo este bien escrito)
+        Set<ConstraintViolation<ResidenteRequest>> errores = validator.validate(req);
+        if (!errores.isEmpty()) {
+            ConstraintViolation<ResidenteRequest> primero = errores.iterator().next();
+            flash.addFlashAttribute("error", "El campo " + primero.getPropertyPath() + " " + primero.getMessage());
+            return "redirect:/panel/residentes";
+        }
         try {
-            residenteService.crear(new ResidenteRequest(nombre, correo, departamentoId));
+            residenteService.crear(req);
             flash.addFlashAttribute("ok", "Residente registrado");
         } catch (ReglaNegocioException | RecursoNoEncontradoException e) {
             flash.addFlashAttribute("error", e.getMessage());
@@ -115,6 +127,12 @@ public class PanelController {
     public String escanear(@RequestParam String codigo, Model model) {
         model.addAttribute("resultado", accesoService.validar(codigo.trim()));
         return "panel/caseta";
+    }
+
+    // pagina que abre la camara y lee el QR con JavaScript (static/js/escaner.js)
+    @GetMapping("/panel/escanear")
+    public String paginaEscaner() {
+        return "panel/escanear";
     }
 
     @PostMapping("/panel/caseta/imagen")

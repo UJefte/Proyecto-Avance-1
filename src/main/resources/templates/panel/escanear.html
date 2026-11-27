@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head th:replace="~{fragmentos :: cabeza('Escanear QR')}"></head>
+<body>
+<header th:replace="~{fragmentos :: menu('caseta')}"></header>
+<main>
+    <h1>Escanear QR con la cámara</h1>
+    <p class="nota">Pon el código QR frente a la cámara. Al leerlo se valida solo.</p>
+
+    <!-- aviso si el navegador no deja usar la camara (pasa cuando no es https) -->
+    <p id="aviso" class="aviso error" hidden></p>
+
+    <!-- aqui la libreria pinta el video de la camara -->
+    <div id="lector" class="lector"></div>
+
+    <!-- aqui se muestra lo que respondio el servidor -->
+    <div id="resultado" class="resultado" hidden>
+        <h2 id="res-titulo"></h2>
+        <p><strong id="res-titular"></strong> <span id="res-tipo"></span></p>
+        <p id="res-detalle"></p>
+        <p class="nota" id="res-regreso"></p>
+    </div>
+
+    <p>
+        <button type="button" id="otro" hidden>Escanear otro</button>
+        <a th:href="@{/panel/caseta}">Volver a la caseta</a>
+    </p>
+</main>
+
+<script th:src="@{/js/libs/html5-qrcode.min.js}"></script>
+<script th:src="@{/js/escaner.js}"></script>
+</body>
+</html>
